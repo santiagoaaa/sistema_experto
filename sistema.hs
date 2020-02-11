@@ -1,8 +1,22 @@
 import System.IO
+import Data.List.Split
 
+--hace split  de antecedente y consecuente
+splitClausula delimAntecedentes delimConsecuente str = [splitOn delimAntecedentes (head (splitOn delimConsecuente str)), tail (splitOn delimConsecuente str)]
+
+--hace split de las reglas con #
+--splitArchivo::[Char] -> [Char] -> [Char] -> [Char] -> [[[[Char]]]]
+splitArchivo delim delimAntecedentes delimConsecuente str = map (splitClausula delimAntecedentes delimConsecuente) (splitOn delim str)
+
+{-
+    let file = "abc.txt" 
+    writeFile file "I am just experimenting here." 
+    readFile file
+-}
 main = do
     hSetBuffering stdin LineBuffering
     doLoop
+
 
 doLoop = do
     
@@ -14,7 +28,7 @@ doLoop = do
                     putStrLn ("Ingresa tus hechos a la BH ")
                     item <- getLine
                     appendFile "bh.txt" (item ++ ",") {-Ingresa hechos-}
-                    contents <- readFile "bh.txt"
+                    --contents <- readFile "bh.txt"
                     putStrLn ("*Hechos registrados*")
                     doLoop
 
@@ -27,3 +41,7 @@ doLoop = do
 
         'i':_ -> do putStrLn ("Motor de inferencia")
                     putStrLn ("Comienza...")
+                    contents <- readFile "bc.txt"
+                    print $ splitArchivo "#" "," "-" contents --Esto regresa la lista de listas de la BC
+                    doLoop
+                    
