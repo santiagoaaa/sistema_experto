@@ -2,7 +2,6 @@ import System.IO
 
 main = do
     hSetBuffering stdin LineBuffering
-    let regla = []
     doLoop
 
 doLoop = do
@@ -13,8 +12,7 @@ doLoop = do
         'q':_->return(){--}
         'h':_ -> do putStrLn ("Editando BH ")
                     putStrLn ("Ingresa tus hechos a la BH ")
-                    item <- getLine 
-                    a <- hGetChar handle
+                    item <- getLine
                     appendFile "bh.txt" (item ++ ",") {-Ingresa hechos-}
                     contents <- readFile "bh.txt"
                     putStrLn ("*Hechos registrados*")
