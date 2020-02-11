@@ -29,4 +29,3 @@ doLoop = do
 
         'i':_ -> do putStrLn ("Motor de inferencia")
                     putStrLn ("Comienza...")
-                    handle <- openFile "bc.txt" ReadMode
