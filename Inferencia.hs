@@ -60,7 +60,7 @@ equiparacion bc bh
 encadenamiento bc bh i = do
     let cc = equiparacion bc bh
     if i >= (length cc)
-        then bh
+        then [bh, map show cc]
         else do
             let idx = cc !! i
             let nuevoHecho = aplicar bc idx

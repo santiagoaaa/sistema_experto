@@ -1,4 +1,5 @@
 import qualified Inferencia as I
+import qualified Justificacion as J
 import System.IO
 import Data.List.Split
 import Data.List
@@ -82,8 +83,9 @@ doLoop = do
                     --print bc
                     --putStrLn "Base de hechos"
                     --print bh
+                    let resultado = I.encadenamiento bc bh 0
                     putStrLn "***Resultado de la inferencia***"
                     putStrLn "********************************"
-                    print $ I.encadenamiento bc bh 0
+                    J.justificar bh ((resultado !! 0) \\ bh) (map (\x -> read x :: Int) (resultado !! 1)) bc
                     putStrLn "********************************"
                     doLoop
