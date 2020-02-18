@@ -2,10 +2,7 @@ module Inferencia (encadenamiento) where
 
 import Data.List
 import System.IO
-
---bc = [[["a","b"],["p"]],[["b","c"],["m"]],[["d","e","f"],["n"]],[["n","g"],["m"]],[["h","m"],["q"]]]
-
---bh = [["a","b"]]
+import Text.Printf
 
 -- Regresa los antecedentes que se encuentran en la base de hechos
 indices :: [[Char]] -> [[Char]] -> [[Int]]
@@ -35,7 +32,7 @@ masCorto x = let minlist = minimum (map (length) x)
 siguienteRegla :: [[[[Char]]]] -> [[Char]] -> [Int]
 siguienteRegla bc bh = elemIndices (masCorto (completas bc bh)) (completas bc bh)
 
--- Obtiene una lista de Strings con los antecedentes que le faltan a la regla 'idx' para 
+-- Obtiene una lista de Strings con los antecedentes que le faltan a la regla 'idx' para
 -- poder aplicarse
 antecedentesFaltantes :: [[[[Char]]]] -> Int -> [Int] -> [[Char]]
 antecedentesFaltantes bc idx faltas = map (\x -> (head (bc !! idx)) !! x) faltas
@@ -52,13 +49,12 @@ actualizar bh hecho = bh ++ [hecho]
 -- Si no, DEBERIA de preguntar
 equiparacion :: [[[[Char]]]] -> [[Char]] -> [Int]
 equiparacion bc bh
-    | length (masCorto (completas bc bh)) == 0 = siguienteRegla bc bh
+    | length (masCorto (completas bc bh)) == 0 && not (elem cc (siguienteRegla bc bh)) = siguienteRegla bc bh
     | otherwise = []
---    | otherwise = pregunta bc bh
 
 -- Realiza el encadenamiento hacia adelante de forma recursiva
 encadenamiento bc bh i = do
-    let cc = equiparacion bc bh
+    let cc = equiparacion bc bh cc
     if i >= (length cc)
         then [bh, map show cc]
         else do
@@ -73,10 +69,10 @@ encadenamiento bc bh i = do
 --    let faltantes = antecedentesFaltantes bc (posibles !! 0) ((completas bc bh) !! (posibles !! 0))
 --    mapM (\x -> preguntaSintoma x bh) faltantes
 
--- DEBERIA de preguntar si el usuario tiene un sintoma e ingresarlo a la BH si lo tiene
---preguntaSintoma sintoma bh = do
---    print "¿Tienes '" ++ sintoma ++ "'? [s/n]"
---    respuesta <- getLine
---    if respuesta == "s"
---        then actualizar bh sintoma
---        else bh
+-- Pregunta si el usuario tiene un sintoma e ingresarlo a la BH si lo tiene
+preguntaSintoma sintoma bh = do
+    putStrLn $ printf "¿Tienes '%s'? [s/n]" sintoma
+    respuesta <- getLine
+    if respuesta == "s"
+        then return $ actualizar bh sintoma
+        else return $ bh
